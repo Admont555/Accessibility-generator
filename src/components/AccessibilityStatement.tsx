@@ -108,7 +108,10 @@ const AccessibilityStatement = ({ siteName, pluginName, email }: AccessibilitySt
             <h2 className="text-2xl font-semibold mb-4 text-gray-800">נתקלתם בבעיה? ספרו לנו!</h2>
             <p className="text-gray-700 leading-relaxed">
               אנו עושים את מירב המאמצים להציג אתר נגיש שנדרש על פי חוק. במידה ומצאתם קשיים בגלישה באתר, אנא צרו קשר בכתובת: {" "}
-              <a href={`mailto:${email}`} className="text-blue-600 hover:text-blue-700 transition-colors">
+              <a 
+                href={`mailto:${email}`} 
+                className="text-blue-600 hover:text-blue-700 transition-colors underline"
+              >
                 {email}
               </a>
             </p>
@@ -117,6 +120,9 @@ const AccessibilityStatement = ({ siteName, pluginName, email }: AccessibilitySt
           <footer className="mt-12 pt-6 border-t border-gray-200">
             <p className="text-gray-600 text-sm">
               תאריך עדכון ההצהרה: {currentDate}
+            </p>
+            <p className="text-gray-500 text-sm mt-4">
+              הצהרה זו נכתבה על פי המידע הידוע והקיים בזמן כתיבתה. יתכנו שינויים במבנה האתר ו/או בתכניו אשר ישפיעו על נגישותו. אין לראות בהצהרה זו אחריות משפטית או התחייבות כלשהי מעבר לדרישות החוק.
             </p>
           </footer>
         </div>
