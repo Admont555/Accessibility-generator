@@ -2,7 +2,7 @@
 import { format } from "date-fns";
 import { Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 interface AccessibilityStatementProps {
   siteName: string;
@@ -14,22 +14,26 @@ const AccessibilityStatement = ({ siteName, pluginName, email }: AccessibilitySt
   const currentDate = format(new Date(), "dd/MM/yyyy");
   const { toast } = useToast();
 
-  const copyToClipboard = () => {
-    // Get all text content excluding the copy button
-    const statementDiv = document.getElementById('accessibility-statement-content');
-    if (statementDiv) {
-      const text = statementDiv.innerText;
-      navigator.clipboard.writeText(text).then(() => {
-        toast({
-          title: "הועתק בהצלחה",
-          description: "הצהרת הנגישות הועתקה ללוח",
-        });
-      }).catch((err) => {
-        toast({
-          title: "שגיאה בהעתקה",
-          description: "לא ניתן להעתיק את הטקסט",
-          variant: "destructive",
-        });
+  const copyToClipboard = async () => {
+    try {
+      const statementDiv = document.getElementById('accessibility-statement-content');
+      if (!statementDiv) return;
+      
+      // Get text content without the button
+      const textToCopy = statementDiv.innerText;
+      
+      await navigator.clipboard.writeText(textToCopy);
+      
+      toast({
+        title: "הועתק בהצלחה",
+        description: "הצהרת הנגישות הועתקה ללוח",
+      });
+    } catch (err) {
+      console.error('Copy failed:', err);
+      toast({
+        title: "שגיאה בהעתקה",
+        description: "לא ניתן להעתיק את הטקסט",
+        variant: "destructive",
       });
     }
   };
