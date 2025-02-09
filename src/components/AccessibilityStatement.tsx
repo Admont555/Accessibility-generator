@@ -1,8 +1,6 @@
 
 import { format } from "date-fns";
-import { Copy, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
+import { Loader2 } from "lucide-react";
 import { useState } from "react";
 
 interface AccessibilityStatementProps {
@@ -14,44 +12,7 @@ interface AccessibilityStatementProps {
 
 const AccessibilityStatement = ({ siteName, pluginName, email, isPreview = false }: AccessibilityStatementProps) => {
   const currentDate = format(new Date(), "dd/MM/yyyy");
-  const { toast } = useToast();
   const [isCopying, setIsCopying] = useState(false);
-
-  const copyToClipboard = async () => {
-    try {
-      setIsCopying(true);
-      const mainContent = document.getElementById('main-content');
-      if (!mainContent) {
-        throw new Error('Content element not found');
-      }
-      
-      const textToCopy = Array.from(mainContent.childNodes)
-        .map(node => {
-          if (node.nodeType === Node.ELEMENT_NODE) {
-            return (node as HTMLElement).innerText;
-          }
-          return node.textContent;
-        })
-        .join('\n')
-        .trim();
-      
-      await navigator.clipboard.writeText(textToCopy);
-      
-      toast({
-        title: "הועתק בהצלחה",
-        description: "הצהרת הנגישות הועתקה ללוח",
-      });
-    } catch (err) {
-      console.error('Copy failed:', err);
-      toast({
-        title: "שגיאה בהעתקה",
-        description: "לא ניתן להעתיק את הטקסט",
-        variant: "destructive",
-      });
-    } finally {
-      setIsCopying(false);
-    }
-  };
 
   const mainContentClass = isPreview 
     ? "opacity-50 pointer-events-none select-none"
@@ -59,22 +20,6 @@ const AccessibilityStatement = ({ siteName, pluginName, email, isPreview = false
 
   return (
     <div className="relative mb-12">
-      <div className="sticky top-4 z-10 flex justify-end mb-4">
-        <Button
-          onClick={copyToClipboard}
-          className="gap-2"
-          variant="outline"
-          disabled={isCopying || isPreview}
-        >
-          {isCopying ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <Copy className="h-4 w-4" />
-          )}
-          העתק הצהרה
-        </Button>
-      </div>
-
       <div className={`bg-white rounded-lg shadow-lg p-6 md:p-8 transition-all ${mainContentClass}`}>
         <div id="main-content">
           <h1 className="text-3xl font-bold mb-8 text-gray-900">הצהרת נגישות</h1>
@@ -129,6 +74,16 @@ const AccessibilityStatement = ({ siteName, pluginName, email, isPreview = false
               >
                 {email}
               </a>
+            </p>
+          </section>
+
+          <section className="bg-gray-50 p-6 rounded-lg shadow-sm mt-8">
+            <h2 className="text-2xl font-semibold mb-4 text-gray-800">הצהרת נגישות</h2>
+            <p className="text-gray-700 leading-relaxed">
+              • אתר זה עומד בדרישות תקנות שוויון זכויות לאנשים עם מוגבלות (התאמות נגישות לשירות), התשע"ג 2013
+            </p>
+            <p className="text-gray-700 leading-relaxed mt-2">
+              • התאמות הנגישות בוצעו עפ"י המלצות התקן הישראלי (ת"י 5568) לנגישות תכנים באינטרנט ברמת AA ומסמך WCAG2.0 הבינלאומי
             </p>
           </section>
 

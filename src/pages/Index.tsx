@@ -4,7 +4,7 @@ import AccessibilityStatement from "@/components/AccessibilityStatement";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Printer, Eye, Save } from "lucide-react";
+import { ArrowRight, Printer, Eye } from "lucide-react";
 
 const Index = () => {
   const [formData, setFormData] = useState({
@@ -114,17 +114,6 @@ const Index = () => {
           >
             <Printer className="h-4 w-4" />
             הדפס
-          </Button>
-          <Button
-            onClick={() => {
-              const data = JSON.stringify(formData);
-              localStorage.setItem('accessibilityFormData', data);
-            }}
-            variant="outline"
-            className="gap-2"
-          >
-            <Save className="h-4 w-4" />
-            שמור
           </Button>
         </div>
 
