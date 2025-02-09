@@ -21,13 +21,9 @@ const Index = () => {
     }));
   };
 
-  const validateEmail = (email: string) => {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  };
-
   return (
     <div className="min-h-screen bg-[#F8FBFF] font-heebo py-12">
-      <div className="max-w-4xl mx-auto p-4 md:p-6 space-y-8 direction-rtl" dir="rtl">
+      <div className="max-w-4xl mx-auto p-6 space-y-8 direction-rtl" dir="rtl">
         <div className="flex items-center justify-between mb-8">
           <Button 
             variant="ghost" 
@@ -44,9 +40,9 @@ const Index = () => {
           />
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-lg mb-8 transition-all hover:shadow-xl">
+        <div className="bg-white p-6 rounded-lg shadow-sm mb-8">
           <h2 className="text-2xl font-semibold mb-6 text-custom-darkGray">הגדרות הצהרת נגישות</h2>
-          <div className="space-y-6">
+          <div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="siteName" className="text-custom-darkGray">שם האתר</Label>
               <Input
@@ -56,7 +52,6 @@ const Index = () => {
                 onChange={handleInputChange}
                 className="text-right border-custom-yellow focus:border-custom-yellow"
                 placeholder="הכנס את שם האתר"
-                aria-label="שם האתר"
               />
             </div>
             <div className="space-y-2">
@@ -68,7 +63,6 @@ const Index = () => {
                 onChange={handleInputChange}
                 className="text-right border-custom-yellow focus:border-custom-yellow"
                 placeholder="הכנס את שם התוסף"
-                aria-label="שם התוסף"
               />
             </div>
             <div className="space-y-2">
@@ -79,16 +73,10 @@ const Index = () => {
                 type="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                className={`text-right border-custom-yellow focus:border-custom-yellow ${
-                  !validateEmail(formData.email) && formData.email ? 'border-red-500' : ''
-                }`}
+                className="text-right border-custom-yellow focus:border-custom-yellow"
                 placeholder="הכנס כתובת אימייל"
                 dir="ltr"
-                aria-label="כתובת אימייל"
               />
-              {!validateEmail(formData.email) && formData.email && (
-                <p className="text-red-500 text-sm mt-1">כתובת אימייל לא תקינה</p>
-              )}
             </div>
           </div>
         </div>

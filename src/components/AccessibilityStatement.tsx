@@ -1,8 +1,8 @@
 
 import { format } from "date-fns";
-import { useState } from "react";
+import { Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Check, Copy } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface AccessibilityStatementProps {
   siteName: string;
@@ -12,27 +12,55 @@ interface AccessibilityStatementProps {
 
 const AccessibilityStatement = ({ siteName, pluginName, email }: AccessibilityStatementProps) => {
   const currentDate = format(new Date(), "dd/MM/yyyy");
-  const [isCopying, setIsCopying] = useState(false);
+  const { toast } = useToast();
 
-  const disclaimerText = `חשוב לציין: הצהרת נגישות זו הינה תבנית בלבד ומשמשת כקווים מנחים. אין לראות בה מסמך משפטי מחייב.
-
-אנו מסירים כל אחריות לגבי השימוש בתבנית זו. על כל אתר לוודא באופן עצמאי את התאמת ההצהרה לדרישות החוק, התקנות והתקנים הרלוונטיים.
-
-מומלץ להתייעץ עם אנשי מקצוע ו/או יועצים משפטיים לגבי התאמת ההצהרה לצרכים הספציפיים של האתר שלכם.`;
-
-  const handleCopyDisclaimer = async () => {
+  const copyToClipboard = async () => {
     try {
-      await navigator.clipboard.writeText(disclaimerText);
-      setIsCopying(true);
-      setTimeout(() => setIsCopying(false), 2000);
+      const mainContent = document.getElementById('main-content');
+      if (!mainContent) {
+        throw new Error('Content element not found');
+      }
+      
+      const textToCopy = Array.from(mainContent.childNodes)
+        .map(node => {
+          if (node.nodeType === Node.ELEMENT_NODE) {
+            return (node as HTMLElement).innerText;
+          }
+          return node.textContent;
+        })
+        .join('\n')
+        .trim();
+      
+      await navigator.clipboard.writeText(textToCopy);
+      
+      toast({
+        title: "הועתק בהצלחה",
+        description: "הצהרת הנגישות הועתקה ללוח",
+      });
     } catch (err) {
-      console.error('Failed to copy text:', err);
+      console.error('Copy failed:', err);
+      toast({
+        title: "שגיאה בהעתקה",
+        description: "לא ניתן להעתיק את הטקסט",
+        variant: "destructive",
+      });
     }
   };
 
   return (
     <div className="relative mb-12">
-      <div className="bg-white rounded-lg shadow-lg p-6 md:p-8 transition-all">
+      <div className="sticky top-4 z-10 flex justify-end mb-4">
+        <Button
+          onClick={copyToClipboard}
+          className="gap-2"
+          variant="outline"
+        >
+          <Copy className="h-4 w-4" />
+          העתק הצהרה
+        </Button>
+      </div>
+
+      <div id="accessibility-statement" className="max-w-4xl mx-auto p-6 space-y-8 animate-fadeIn direction-rtl" dir="rtl">
         <div id="main-content">
           <h1 className="text-3xl font-bold mb-8 text-gray-900">הצהרת נגישות</h1>
           
@@ -40,7 +68,7 @@ const AccessibilityStatement = ({ siteName, pluginName, email }: AccessibilitySt
             באתר {siteName} נעשו מאמצים להנגיש את תכני האתר לכלל האוכלוסייה.
           </p>
 
-          <section className="bg-gray-50 p-6 rounded-lg shadow-sm mb-8 hover:shadow-md transition-shadow">
+          <section className="bg-gray-50 p-6 rounded-lg shadow-sm mb-8">
             <h2 className="text-2xl font-semibold mb-4 text-gray-800">מהו אתר נגיש?</h2>
             <p className="text-gray-700 leading-relaxed">
               אתר שמוגדר "אתר נגיש" אמור לספק חווית גלישה נעימה ונוחה לכולם. מדובר על אתר ידידותי, זמין 24 שעות ביממה לשימוש עבור אנשים עם מוגבלויות, לקויות ואנשים המתקשים בהפעלת המחשב והאינטרנט.
@@ -89,42 +117,23 @@ const AccessibilityStatement = ({ siteName, pluginName, email }: AccessibilitySt
             </p>
           </section>
 
-          <section className="bg-gray-50 p-6 rounded-lg shadow-sm mt-8">
-            <h2 className="text-2xl font-semibold mb-4 text-gray-800">הצהרת נגישות</h2>
-            <p className="text-gray-700 leading-relaxed">
-              • אתר זה עומד בדרישות תקנות שוויון זכויות לאנשים עם מוגבלות (התאמות נגישות לשירות), התשע"ג 2013
-            </p>
-            <p className="text-gray-700 leading-relaxed mt-2">
-              • התאמות הנגישות בוצעו עפ"י המלצות התקן הישראלי (ת"י 5568) לנגישות תכנים באינטרנט ברמת AA ומסמך WCAG2.0 הבינלאומי
-            </p>
-          </section>
-
           <footer className="mt-12 pt-6 border-t border-gray-200">
             <p className="text-gray-600 text-sm">
               תאריך עדכון ההצהרה: {currentDate}
             </p>
           </footer>
+        </div>
 
-          <div className="mt-8 p-6 bg-yellow-50 rounded-lg relative">
-            <div className="absolute top-4 left-4">
-              <Button
-                onClick={handleCopyDisclaimer}
-                variant="outline"
-                size="sm"
-                className="gap-2"
-              >
-                {isCopying ? (
-                  <Check className="h-4 w-4 text-green-500" />
-                ) : (
-                  <Copy className="h-4 w-4" />
-                )}
-                {isCopying ? 'הועתק!' : 'העתק'}
-              </Button>
-            </div>
-            <div className="whitespace-pre-wrap text-gray-700 leading-relaxed">
-              {disclaimerText}
-            </div>
-          </div>
+        <div className="space-y-4 text-gray-500 text-sm mt-4">
+          <p>
+            חשוב לציין: הצהרת נגישות זו הינה תבנית בלבד ומשמשת כקווים מנחים. אין לראות בה מסמך משפטי מחייב.
+          </p>
+          <p>
+            אנו מסירים כל אחריות לגבי השימוש בתבנית זו. על כל אתר לוודא באופן עצמאי את התאמת ההצהרה לדרישות החוק, התקנות והתקנים הרלוונטיים.
+          </p>
+          <p>
+            מומלץ להתייעץ עם אנשי מקצוע ו/או יועצים משפטיים לגבי התאמת ההצהרה לצרכים הספציפיים של האתר שלכם.
+          </p>
         </div>
       </div>
     </div>
