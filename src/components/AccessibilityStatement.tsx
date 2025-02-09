@@ -1,5 +1,8 @@
 
 import { format } from "date-fns";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Check, Copy } from "lucide-react";
 
 interface AccessibilityStatementProps {
   siteName: string;
@@ -9,12 +12,23 @@ interface AccessibilityStatementProps {
 
 const AccessibilityStatement = ({ siteName, pluginName, email }: AccessibilityStatementProps) => {
   const currentDate = format(new Date(), "dd/MM/yyyy");
+  const [isCopying, setIsCopying] = useState(false);
 
   const disclaimerText = `חשוב לציין: הצהרת נגישות זו הינה תבנית בלבד ומשמשת כקווים מנחים. אין לראות בה מסמך משפטי מחייב.
 
 אנו מסירים כל אחריות לגבי השימוש בתבנית זו. על כל אתר לוודא באופן עצמאי את התאמת ההצהרה לדרישות החוק, התקנות והתקנים הרלוונטיים.
 
 מומלץ להתייעץ עם אנשי מקצוע ו/או יועצים משפטיים לגבי התאמת ההצהרה לצרכים הספציפיים של האתר שלכם.`;
+
+  const handleCopyDisclaimer = async () => {
+    try {
+      await navigator.clipboard.writeText(disclaimerText);
+      setIsCopying(true);
+      setTimeout(() => setIsCopying(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy text:', err);
+    }
+  };
 
   return (
     <div className="relative mb-12">
@@ -91,7 +105,22 @@ const AccessibilityStatement = ({ siteName, pluginName, email }: AccessibilitySt
             </p>
           </footer>
 
-          <div className="mt-8 p-6 bg-yellow-50 rounded-lg">
+          <div className="mt-8 p-6 bg-yellow-50 rounded-lg relative">
+            <div className="absolute top-4 left-4">
+              <Button
+                onClick={handleCopyDisclaimer}
+                variant="outline"
+                size="sm"
+                className="gap-2"
+              >
+                {isCopying ? (
+                  <Check className="h-4 w-4 text-green-500" />
+                ) : (
+                  <Copy className="h-4 w-4" />
+                )}
+                {isCopying ? 'הועתק!' : 'העתק'}
+              </Button>
+            </div>
             <div className="whitespace-pre-wrap text-gray-700 leading-relaxed">
               {disclaimerText}
             </div>
