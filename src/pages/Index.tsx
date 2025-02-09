@@ -4,7 +4,7 @@ import AccessibilityStatement from "@/components/AccessibilityStatement";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Printer, Eye } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 const Index = () => {
   const [formData, setFormData] = useState({
@@ -12,7 +12,6 @@ const Index = () => {
     pluginName: "תוסף נגישות",
     email: "example@domain.com",
   });
-  const [isPreview, setIsPreview] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -24,10 +23,6 @@ const Index = () => {
 
   const validateEmail = (email: string) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  };
-
-  const handlePrint = () => {
-    window.print();
   };
 
   return (
@@ -98,30 +93,10 @@ const Index = () => {
           </div>
         </div>
 
-        <div className="flex gap-2 justify-end mb-4 flex-wrap">
-          <Button
-            onClick={() => setIsPreview(!isPreview)}
-            variant="outline"
-            className="gap-2"
-          >
-            <Eye className="h-4 w-4" />
-            {isPreview ? 'ערוך' : 'תצוגה מקדימה'}
-          </Button>
-          <Button
-            onClick={handlePrint}
-            variant="outline"
-            className="gap-2"
-          >
-            <Printer className="h-4 w-4" />
-            הדפס
-          </Button>
-        </div>
-
         <AccessibilityStatement 
           siteName={formData.siteName}
           pluginName={formData.pluginName}
           email={formData.email}
-          isPreview={isPreview}
         />
       </div>
     </div>
