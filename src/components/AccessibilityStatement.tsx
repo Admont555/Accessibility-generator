@@ -1,21 +1,25 @@
 
 import { format } from "date-fns";
-import { Copy } from "lucide-react";
+import { Copy, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
 
 interface AccessibilityStatementProps {
   siteName: string;
   pluginName: string;
   email: string;
+  isPreview?: boolean;
 }
 
-const AccessibilityStatement = ({ siteName, pluginName, email }: AccessibilityStatementProps) => {
+const AccessibilityStatement = ({ siteName, pluginName, email, isPreview = false }: AccessibilityStatementProps) => {
   const currentDate = format(new Date(), "dd/MM/yyyy");
   const { toast } = useToast();
+  const [isCopying, setIsCopying] = useState(false);
 
   const copyToClipboard = async () => {
     try {
+      setIsCopying(true);
       const mainContent = document.getElementById('main-content');
       if (!mainContent) {
         throw new Error('Content element not found');
@@ -44,8 +48,14 @@ const AccessibilityStatement = ({ siteName, pluginName, email }: AccessibilitySt
         description: "לא ניתן להעתיק את הטקסט",
         variant: "destructive",
       });
+    } finally {
+      setIsCopying(false);
     }
   };
+
+  const mainContentClass = isPreview 
+    ? "opacity-50 pointer-events-none select-none"
+    : "";
 
   return (
     <div className="relative mb-12">
@@ -54,13 +64,18 @@ const AccessibilityStatement = ({ siteName, pluginName, email }: AccessibilitySt
           onClick={copyToClipboard}
           className="gap-2"
           variant="outline"
+          disabled={isCopying || isPreview}
         >
-          <Copy className="h-4 w-4" />
+          {isCopying ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <Copy className="h-4 w-4" />
+          )}
           העתק הצהרה
         </Button>
       </div>
 
-      <div id="accessibility-statement" className="max-w-4xl mx-auto p-6 space-y-8 animate-fadeIn direction-rtl" dir="rtl">
+      <div className={`bg-white rounded-lg shadow-lg p-6 md:p-8 transition-all ${mainContentClass}`}>
         <div id="main-content">
           <h1 className="text-3xl font-bold mb-8 text-gray-900">הצהרת נגישות</h1>
           
@@ -68,7 +83,7 @@ const AccessibilityStatement = ({ siteName, pluginName, email }: AccessibilitySt
             באתר {siteName} נעשו מאמצים להנגיש את תכני האתר לכלל האוכלוסייה.
           </p>
 
-          <section className="bg-gray-50 p-6 rounded-lg shadow-sm mb-8">
+          <section className="bg-gray-50 p-6 rounded-lg shadow-sm mb-8 hover:shadow-md transition-shadow">
             <h2 className="text-2xl font-semibold mb-4 text-gray-800">מהו אתר נגיש?</h2>
             <p className="text-gray-700 leading-relaxed">
               אתר שמוגדר "אתר נגיש" אמור לספק חווית גלישה נעימה ונוחה לכולם. מדובר על אתר ידידותי, זמין 24 שעות ביממה לשימוש עבור אנשים עם מוגבלויות, לקויות ואנשים המתקשים בהפעלת המחשב והאינטרנט.
@@ -123,19 +138,15 @@ const AccessibilityStatement = ({ siteName, pluginName, email }: AccessibilitySt
             </p>
           </footer>
         </div>
-
-        <div className="space-y-4 text-gray-500 text-sm mt-4">
-          <p>
-            חשוב לציין: הצהרת נגישות זו הינה תבנית בלבד ומשמשת כקווים מנחים. אין לראות בה מסמך משפטי מחייב.
-          </p>
-          <p>
-            אנו מסירים כל אחריות לגבי השימוש בתבנית זו. על כל אתר לוודא באופן עצמאי את התאמת ההצהרה לדרישות החוק, התקנות והתקנים הרלוונטיים.
-          </p>
-          <p>
-            מומלץ להתייעץ עם אנשי מקצוע ו/או יועצים משפטיים לגבי התאמת ההצהרה לצרכים הספציפיים של האתר שלכם.
-          </p>
-        </div>
       </div>
+
+      {isPreview && (
+        <div className="absolute inset-0 flex items-center justify-center bg-black/5 rounded-lg pointer-events-none">
+          <div className="bg-white p-4 rounded-md shadow-lg">
+            <p className="text-lg font-semibold">מצב תצוגה מקדימה</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
