@@ -21,7 +21,6 @@ const AccessibilityStatement = ({ siteName, pluginName, email }: AccessibilitySt
         throw new Error('Content element not found');
       }
       
-      // Create a text representation of the content
       const textToCopy = Array.from(statementDiv.childNodes)
         .map(node => {
           if (node.nodeType === Node.ELEMENT_NODE) {
@@ -49,15 +48,17 @@ const AccessibilityStatement = ({ siteName, pluginName, email }: AccessibilitySt
   };
 
   return (
-    <div className="relative">
-      <Button
-        onClick={copyToClipboard}
-        className="absolute left-0 top-0 gap-2"
-        variant="outline"
-      >
-        <Copy className="h-4 w-4" />
-        העתק הצהרה
-      </Button>
+    <div className="relative mb-12">
+      <div className="sticky top-4 z-10 flex justify-end mb-4">
+        <Button
+          onClick={copyToClipboard}
+          className="gap-2"
+          variant="outline"
+        >
+          <Copy className="h-4 w-4" />
+          העתק הצהרה
+        </Button>
+      </div>
 
       <div id="accessibility-statement" className="max-w-4xl mx-auto p-6 space-y-8 animate-fadeIn direction-rtl" dir="rtl">
         <div id="accessibility-statement-content">
