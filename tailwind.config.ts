@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -26,12 +25,12 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          DEFAULT: "#F2B807",
+          foreground: "#202C33",
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
+          DEFAULT: "#F8FBFF",
+          foreground: "#202C33",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
@@ -53,6 +52,14 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        custom: {
+          yellow: "#F2B807",
+          lightBlue: "#F8FBFF",
+          darkGray: "#202C33",
+        },
+      },
+      fontFamily: {
+        heebo: ["Heebo", "sans-serif"],
       },
       keyframes: {
         fadeIn: {
