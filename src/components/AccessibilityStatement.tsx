@@ -16,12 +16,12 @@ const AccessibilityStatement = ({ siteName, pluginName, email }: AccessibilitySt
 
   const copyToClipboard = async () => {
     try {
-      const statementDiv = document.getElementById('accessibility-statement-content');
-      if (!statementDiv) {
+      const mainContent = document.getElementById('main-content');
+      if (!mainContent) {
         throw new Error('Content element not found');
       }
       
-      const textToCopy = Array.from(statementDiv.childNodes)
+      const textToCopy = Array.from(mainContent.childNodes)
         .map(node => {
           if (node.nodeType === Node.ELEMENT_NODE) {
             return (node as HTMLElement).innerText;
@@ -61,7 +61,7 @@ const AccessibilityStatement = ({ siteName, pluginName, email }: AccessibilitySt
       </div>
 
       <div id="accessibility-statement" className="max-w-4xl mx-auto p-6 space-y-8 animate-fadeIn direction-rtl" dir="rtl">
-        <div id="accessibility-statement-content">
+        <div id="main-content">
           <h1 className="text-3xl font-bold mb-8 text-gray-900">הצהרת נגישות</h1>
           
           <p className="text-gray-700 leading-relaxed mb-6">
@@ -121,18 +121,19 @@ const AccessibilityStatement = ({ siteName, pluginName, email }: AccessibilitySt
             <p className="text-gray-600 text-sm">
               תאריך עדכון ההצהרה: {currentDate}
             </p>
-            <div className="space-y-4 text-gray-500 text-sm mt-4">
-              <p>
-                חשוב לציין: הצהרת נגישות זו הינה תבנית בלבד ומשמשת כקווים מנחים. אין לראות בה מסמך משפטי מחייב.
-              </p>
-              <p>
-                אנו מסירים כל אחריות לגבי השימוש בתבנית זו. על כל אתר לוודא באופן עצמאי את התאמת ההצהרה לדרישות החוק, התקנות והתקנים הרלוונטיים.
-              </p>
-              <p>
-                מומלץ להתייעץ עם אנשי מקצוע ו/או יועצים משפטיים לגבי התאמת ההצהרה לצרכים הספציפיים של האתר שלכם.
-              </p>
-            </div>
           </footer>
+        </div>
+
+        <div className="space-y-4 text-gray-500 text-sm mt-4">
+          <p>
+            חשוב לציין: הצהרת נגישות זו הינה תבנית בלבד ומשמשת כקווים מנחים. אין לראות בה מסמך משפטי מחייב.
+          </p>
+          <p>
+            אנו מסירים כל אחריות לגבי השימוש בתבנית זו. על כל אתר לוודא באופן עצמאי את התאמת ההצהרה לדרישות החוק, התקנות והתקנים הרלוונטיים.
+          </p>
+          <p>
+            מומלץ להתייעץ עם אנשי מקצוע ו/או יועצים משפטיים לגבי התאמת ההצהרה לצרכים הספציפיים של האתר שלכם.
+          </p>
         </div>
       </div>
     </div>
