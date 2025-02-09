@@ -17,10 +17,20 @@ const AccessibilityStatement = ({ siteName, pluginName, email }: AccessibilitySt
   const copyToClipboard = async () => {
     try {
       const statementDiv = document.getElementById('accessibility-statement-content');
-      if (!statementDiv) return;
+      if (!statementDiv) {
+        throw new Error('Content element not found');
+      }
       
-      // Get text content without the button
-      const textToCopy = statementDiv.innerText;
+      // Create a text representation of the content
+      const textToCopy = Array.from(statementDiv.childNodes)
+        .map(node => {
+          if (node.nodeType === Node.ELEMENT_NODE) {
+            return (node as HTMLElement).innerText;
+          }
+          return node.textContent;
+        })
+        .join('\n')
+        .trim();
       
       await navigator.clipboard.writeText(textToCopy);
       
